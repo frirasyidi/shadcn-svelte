@@ -1,9 +1,9 @@
 <script lang="ts">
-	import ArrowLeft from "svelte-radix/ArrowLeft.svelte";
+	import ArrowLeft from "lucide-svelte/icons/arrow-left";
 	import type { WithoutChildren } from "bits-ui";
-	import { getEmblaContext } from "./context.js";
 	import { cn } from "$lib/utils.js";
-	import { Button, type Props } from "$lib/registry/new-york/ui/button/index.js";
+	import { Button, type ButtonProps } from "$lib/registry/new-york/ui/button/index.js";
+	import { useCarousel } from "./context.svelte.js";
 
 	let {
 		ref = $bindable(null),
@@ -11,9 +11,9 @@
 		variant = "outline",
 		size = "icon",
 		...restProps
-	}: WithoutChildren<Props> = $props();
+	}: WithoutChildren<ButtonProps> = $props();
 
-	const emblaCtx = getEmblaContext("<Carousel.Previous/>");
+	const carousel = useCarousel();
 </script>
 
 <Button
@@ -21,14 +21,14 @@
 	{size}
 	class={cn(
 		"absolute size-8 touch-manipulation rounded-full",
-		emblaCtx.orientation === "horizontal"
+		carousel.orientation === "horizontal"
 			? "-left-12 top-1/2 -translate-y-1/2"
 			: "-top-12 left-1/2 -translate-x-1/2 rotate-90",
 		className
 	)}
-	disabled={!emblaCtx.canScrollPrev}
-	onclick={emblaCtx.scrollPrev}
-	onkeydown={emblaCtx.handleKeyDown}
+	disabled={!carousel.canScrollPrev}
+	onclick={carousel.scrollPrev}
+	onkeydown={(e) => carousel.handleKeydown(e)}
 	{...restProps}
 	bind:ref
 >

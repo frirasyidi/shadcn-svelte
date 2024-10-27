@@ -1,11 +1,11 @@
 <script lang="ts">
 	import * as Card from "$lib/registry/default/ui/card/index.js";
 	import * as Carousel from "$lib/registry/default/ui/carousel/index.js";
-	import type { CarouselAPI } from "$lib/registry/default/ui/carousel/context.js";
+	import { Carousel as CarouselRoot } from "$lib/registry/default/ui/carousel/index.js";
 
-	let api = $state<CarouselAPI>();
+	let carousel = $state<typeof CarouselRoot>(null!);
 
-	const count = $derived(api ? api.scrollSnapList().length : 0);
+	const count = $derived(carousel.state.api ? carousel.state.scrollSnapList().length : 0);
 	let current = $state(0);
 
 	$effect(() => {
@@ -19,7 +19,7 @@
 </script>
 
 <div>
-	<Carousel.Root setApi={(emblaApi) => (api = emblaApi)} class="w-full max-w-xs">
+	<Carousel.Root bind:this={carousel as never} class="w-full max-w-xs">
 		<Carousel.Content>
 			{#each Array(5) as _, i (i)}
 				<Carousel.Item>

@@ -2,8 +2,8 @@
 	import emblaCarouselSvelte from "embla-carousel-svelte";
 	import type { WithElementRef } from "bits-ui";
 	import type { HTMLAttributes } from "svelte/elements";
-	import { getEmblaContext } from "./context.js";
 	import { cn } from "$lib/utils.js";
+	import { useCarousel } from "./context.svelte.js";
 
 	let {
 		ref = $bindable(null),
@@ -12,7 +12,7 @@
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 
-	const emblaCtx = getEmblaContext("<Carousel.Content/>");
+	const carousel = useCarousel();
 </script>
 
 <!-- svelte-ignore event_directive_deprecated -->
@@ -22,18 +22,18 @@
 		options: {
 			container: "[data-embla-container]",
 			slides: "[data-embla-slide]",
-			...emblaCtx.options,
-			axis: emblaCtx.orientation === "horizontal" ? "x" : "y",
+			...carousel.opts,
+			axis: carousel.orientation === "horizontal" ? "x" : "y",
 		},
-		plugins: emblaCtx.plugins,
+		plugins: carousel.plugins,
 	}}
-	on:emblaInit={emblaCtx.onInit}
+	on:emblaInit={(e) => carousel.onInit(e)}
 >
 	<div
 		bind:this={ref}
 		class={cn(
 			"flex",
-			emblaCtx.orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+			carousel.orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
 			className
 		)}
 		data-embla-container=""
